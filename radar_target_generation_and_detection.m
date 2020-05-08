@@ -21,8 +21,8 @@ c = 3e8;
 % *%TODO* :
 % define the target's initial position and velocity. Note : Velocity
 % remains contant
-targetRange = 30;
-targetVelocity = 20;
+initTargetRange = 30;
+initTargetVelocity = 20;
 
 
 %% FMCW Waveform Generation
@@ -55,30 +55,39 @@ Tx = zeros(1,length(t)); %transmitted signal
 Rx = zeros(1,length(t)); %received signal
 Mix = zeros(1,length(t)); %beat signal
 
-%Similar vectors for range_covered and time delay.
-r_t = zeros(1,length(t));
-td = zeros(1,length(t));
+% Similar vectors for range_covered and time delay.
+rangeTarget = zeros(1,length(t));
+velTarget = zeros(1,length(t));
+timeDelay = zeros(1,length(t));
 
 %% Signal generation and Moving Target simulation
 % Running the radar scenario over the time. 
 
-for i=1:length(t)         
+for i = 1 : length(t)         
+
+    T = t(i);
+    % *%TODO* :
+    % For each time stamp update the Range of the Target for constant velocity.
+    if i < 2
+        rangeTarget(i) = initTargetRange + initTargetVelocity*T;
+    else
+        rangeTarget(i) = rangeTarget(i-1) + initTargetVelocity*T;
+    end
     
+    timeDelay(i) = 2*rangeTarget(i)/c;
+    tau = timeDelay(i);
     
     % *%TODO* :
-    %For each time stamp update the Range of the Target for constant velocity. 
+    % For each time sample we need update the transmitted and
+    % received signal. 
+    Tx(i) = cos(2*pi*(carrierFreq*T) + (sweepSlope*T^2/2));
+    Rx(i) = cos(2*pi*(carrierFreq*(T-tau)) + (sweepSlope*(T-tau)^2/2));
     
     % *%TODO* :
-    %For each time sample we need update the transmitted and
-    %received signal. 
-    Tx(i) = 
-    Rx (i)  =
-    
-    % *%TODO* :
-    %Now by mixing the Transmit and Receive generate the beat signal
-    %This is done by element wise matrix multiplication of Transmit and
-    %Receiver Signal
-    Mix(i) = 
+    % Now by mixing the Transmit and Receive generate the beat signal
+    % This is done by element wise matrix multiplication of Transmit and
+    % Receiver Signal
+    Mix(i) = times(Tx(i), Rx(i));
     
 end
 
