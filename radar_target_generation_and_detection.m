@@ -9,6 +9,7 @@ clc;
 % Max Velocity = 100 m/s
 % Speed of light = 3e8
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
+carrierFreq = 77e9;
 maxRange = 200;
 rangeResolution = 1;
 maxV = 70;
@@ -31,9 +32,9 @@ targetVelocity = 20;
 % Calculate the Bandwidth (B), Chirp Time (Tchirp) and Slope (slope) of the FMCW
 % chirp using the requirements above.
 
-
-% Operating carrier frequency of Radar 
-fc= 77e9;             %carrier freq
+sweepBandwidth = c/(2*rangeResolution);
+Tchirp = 5.5*2*maxRange/c;
+sweepSlope = sweepBandwidth/Tchirp;
 
                                                           
 % The number of chirps in one sequence. Its ideal to have 2^ value for the ease of running the FFT
