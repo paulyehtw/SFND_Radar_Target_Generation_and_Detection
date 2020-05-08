@@ -37,27 +37,27 @@ Tchirp = 5.5*2*maxRange/c;
 sweepSlope = sweepBandwidth/Tchirp;
 
                                                           
+%% Set up loop sequence                              
 % The number of chirps in one sequence. Its ideal to have 2^ value for the ease of running the FFT
 % for Doppler Estimation. 
-Nd=128;                   % #of doppler cells OR #of sent periods % number of chirps
+Nd = 128;                   % #of doppler cells OR #of sent periods % number of chirps
 
 % The number of samples on each chirp. 
-Nr=1024;                  %for length of time OR # of range cells
+Nr = 1024;                  %for length of time OR # of range cells
 
 % Timestamp for running the displacement scenario for every sample on each
 % chirp
-t=linspace(0,Nd*Tchirp,Nr*Nd); %total time for samples
+t = linspace(0, Nd*Tchirp, Nr*Nd); %total time for samples
 
 
 % Creating the vectors for Tx, Rx and Mix based on the total samples input.
-Tx=zeros(1,length(t)); %transmitted signal
-Rx=zeros(1,length(t)); %received signal
+Tx = zeros(1,length(t)); %transmitted signal
+Rx = zeros(1,length(t)); %received signal
 Mix = zeros(1,length(t)); %beat signal
 
 %Similar vectors for range_covered and time delay.
-r_t=zeros(1,length(t));
-td=zeros(1,length(t));
-
+r_t = zeros(1,length(t));
+td = zeros(1,length(t));
 
 %% Signal generation and Moving Target simulation
 % Running the radar scenario over the time. 
