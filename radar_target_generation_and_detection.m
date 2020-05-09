@@ -21,8 +21,8 @@ c = 3e8;
 % *%TODO* :
 % define the target's initial position and velocity. Note : Velocity
 % remains contant
-initTargetRange = 30;
-initTargetVelocity = 20;
+initTargetRange = 100;
+initTargetVelocity = 50;
 
 
 %% FMCW Waveform Generation
@@ -64,29 +64,22 @@ timeDelay = zeros(1,length(t));
 % Running the radar scenario over the time. 
 
 for i = 1 : length(t)         
-
-    T = t(i);
+ 
     % *%TODO* :
     % For each time stamp update the Range of the Target for constant velocity.
-    if i < 2
-        rangeTarget(i) = initTargetRange + initTargetVelocity*T;
-    else
-        rangeTarget(i) = rangeTarget(i-1) + initTargetVelocity*T;
-    end
-    
+    rangeTarget(i) = initTargetRange + initTargetVelocity*t(i);
     timeDelay(i) = 2*rangeTarget(i)/c;
-    tau = timeDelay(i);
     
     % *%TODO* :
-    % For each time sample we need update the transmitted and
-    % received signal. 
-    Tx(i) = cos(2*pi*(carrierFreq*T) + (sweepSlope*T^2/2));
-    Rx(i) = cos(2*pi*(carrierFreq*(T-tau)) + (sweepSlope*(T-tau)^2/2));
+    %For each time sample we need update the transmitted and
+    %received signal. 
+    Tx(i) = cos(2*pi*(carrierFreq*t(i)+sweepSlope*t(i)^2/2));
+    Rx(i) = cos(2*pi*(carrierFreq*(t(i)-timeDelay(i)) + (sweepSlope*(t(i)-timeDelay(i))^2)/2));
     
     % *%TODO* :
-    % Now by mixing the Transmit and Receive generate the beat signal
-    % This is done by element wise matrix multiplication of Transmit and
-    % Receiver Signal
+    %Now by mixing the Transmit and Receive generate the beat signal
+    %This is done by element wise matrix multiplication of Transmit and
+    %Receiver Signal
     Mix(i) = times(Tx(i), Rx(i));
     
 end
@@ -98,27 +91,28 @@ end
 % reshape the vector into Nr*Nd array. Nr and Nd here would also define the size of
 % Range and Doppler FFT respectively.
 
+
 % *%TODO* :
 % run the FFT on the beat signal along the range bins dimension (Nr) and
 % normalize.
+MixFFT = fft(Mix,Nr)./Nr;
 
 % *%TODO* :
 % Take the absolute value of FFT output
+MixFFT = abs(MixFFT);
 
 % *%TODO* :
 % Output of FFT is double sided signal, but we are interested in only one side of the spectrum.
 % Hence we throw out half of the samples.
-
+MixFFT  = MixFFT(1:Nr/2);
 
 % plotting the range
-figure ('Name','Range from First FFT')
-subplot(2,1,1)
+figure ('Name', 'Range from First FFT')
 
 % *%TODO* :
 % plot FFT output 
-
- 
-axis ([0 200 0 1]);
+plot(MixFFT);
+axis ([0 maxRange 0 1]);
 
 
 
