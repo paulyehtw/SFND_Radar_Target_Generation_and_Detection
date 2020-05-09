@@ -85,13 +85,6 @@ for i = 1 : length(t)
 end
 
 %% RANGE MEASUREMENT
-
-
-% *%TODO* :
-% reshape the vector into Nr*Nd array. Nr and Nd here would also define the size of
-% Range and Doppler FFT respectively.
-
-
 % *%TODO* :
 % run the FFT on the beat signal along the range bins dimension (Nr) and
 % normalize.
@@ -107,14 +100,15 @@ MixFFT = abs(MixFFT);
 MixFFT  = MixFFT(1:Nr/2);
 
 % plotting the range
-figure ('Name', 'Range from First FFT')
+figure ('Name', 'Range from First FFT');
 
 % *%TODO* :
 % plot FFT output 
 plot(MixFFT);
+pbaspect([2 1 1]);
+xlabel('Range');
+ylabel('dB');
 axis ([0 maxRange 0 1]);
-
-
 
 %% RANGE DOPPLER RESPONSE
 % The 2D FFT implementation is already provided here. This will run a 2DFFT
@@ -144,6 +138,8 @@ RDM = 10*log10(RDM) ;
 doppler_axis = linspace(-100,100,Nd);
 range_axis = linspace(-200,200,Nr/2)*((Nr/2)/400);
 figure,surf(doppler_axis,range_axis,RDM);
+xlabel('Doppler Velocity');
+ylabel('Range');
 
 %% CFAR implementation
 
