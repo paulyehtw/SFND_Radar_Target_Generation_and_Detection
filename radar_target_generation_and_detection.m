@@ -58,7 +58,6 @@ Mix = zeros(1,length(t)); %beat signal
 
 % Similar vectors for range_covered and time delay.
 rangeTarget = zeros(1,length(t));
-velTarget = zeros(1,length(t));
 timeDelay = zeros(1,length(t));
 
 %% Signal generation and Moving Target simulation
