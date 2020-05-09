@@ -206,4 +206,6 @@ end
 % display the CFAR output using the Surf function like we did for Range
 % Doppler Response output.
 figure('Name','CA-CFAR Filtered RDM'),surf(doppler_axis, range_axis, mapCFAR);
+xlabel('Doppler Velocity');
+ylabel('Range');
 colorbar;
